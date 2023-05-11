@@ -102,7 +102,32 @@ def draw_grid(clicks, beat):
     active = pygame.draw.rect(screen, blue, [beat*((width-217)//beats) + 220, 0, (width-217)//beats, instruments*80], 5, 3)
 
     return boxes
+
+
+
+
+def next_seq(seq):
+    new_seq = ''
+    for i in range(len(seq)):
+        if seq[i] == 'L':
+            new_seq = new_seq + 'LS'
+        if seq[i] == 'S':
+            new_seq = new_seq + 'L'
+    seq = new_seq
+    return seq
+
+   
+def f(x):
+    seq = 'L'
+    while x>len(seq):
+        seq = next_seq(seq)
     
+    #print (seq)
+    return (seq[x-1])
+
+
+
+x = 1
 
 run = True
 while run:
@@ -112,6 +137,11 @@ while run:
     if beat_changed:
         play_notes()
         beat_changed = False
+
+
+    if (f(x//15) == 'L') and (x%15 == 0):
+        kick.play()
+
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -135,6 +165,8 @@ while run:
             else:
                 active_beat = 0
                 beat_changed = True
+
+    x += 1
 
     pygame.display.flip()
 pygame.quit()
