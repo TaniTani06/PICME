@@ -1,3 +1,5 @@
+#import math
+from mpmath import *
 import pygame
 from pygame import mixer
 pygame.init()
@@ -11,29 +13,30 @@ gray = (128, 128, 128)
 green = (0, 255, 0)
 gold = (212, 175, 55)
 blue = (0, 255, 255)
+yellow = (255, 255, 0)
 
 
 screen = pygame.display.set_mode((width,height))
 pygame.display.set_caption('Bagadugunbaradugunbau')
 label_font = pygame.font.Font('freesansbold.ttf', 32)
 
-fps = 60
+fps = 64
 timer = pygame.time.Clock()
-beats = 8
+beats = 16
 instruments = 6
 boxes = []
 clicked = [[-1 for _ in range(beats)]for _ in  range(instruments)]
-bpm = 240
+bpm = 660
 playing = True
 active_length = 0
 active_beat = 1
 beat_changed = True
 
 #load in sounds
-hi_hat = mixer.Sound('sounds\hi hat.wav')
-snare = mixer.Sound('sounds\snare.wav')
-kick = mixer.Sound('sounds\kick.wav')
-crash = mixer.Sound('sounds\crash.wav')
+agogo = mixer.Sound('sounds\AGOGO4.wav')
+le = mixer.Sound('sounds\le4.wav')
+rumpi = mixer.Sound('sounds\\rumpi.wav')
+rum = mixer.Sound('sounds\\rum3.wav')
 clap = mixer.Sound('sounds\clap.wav')
 tom = mixer.Sound('sounds\\tom.wav')
 pygame.mixer.set_num_channels(instruments*3)
@@ -42,13 +45,13 @@ def play_notes():
     for i in range(len(clicked)):
         if clicked[i][active_beat] == 1:
             if i == 0:
-                hi_hat.play()
+                agogo.play()
             if i == 1:
-                snare.play()
+                le.play()
             if i == 2:
-                kick.play()
+                rumpi.play()
             if i == 3:
-                crash.play()
+                rum.play()
             if i == 4:
                 clap.play()
             if i == 5:
@@ -61,17 +64,17 @@ def draw_grid(clicks, beat):
     boxes = []
     colors = [gray, white, gray]
 
-    hi_hat_text = label_font.render('Hi Hat', True, white)
-    screen.blit(hi_hat_text, (25,30))
+    agogo_text = label_font.render('Gã', True, white)
+    screen.blit(agogo_text, (25,30))
 
-    snare_text = label_font.render('Snare', True, white)
-    screen.blit(snare_text, (25,105))
+    le_text = label_font.render('Lé', True, white)
+    screen.blit(le_text, (25,105))
 
-    kick_text = label_font.render('Bass Drum', True, white)
-    screen.blit(kick_text, (25,185))
+    rumpi_text = label_font.render('Rumpi', True, white)
+    screen.blit(rumpi_text, (25,185))
 
-    crash_text = label_font.render('Crash', True, white)
-    screen.blit(crash_text, (25,265))
+    rum_text = label_font.render('Rum', True, white)
+    screen.blit(rum_text, (25,265))
 
     clap_text = label_font.render('Clap', True, white)
     screen.blit(clap_text, (25,345))
@@ -117,15 +120,28 @@ def next_seq(seq):
     return seq
 
    
-def f(x):
-    seq = 'L'
-    while x>len(seq):
-        seq = next_seq(seq)
+#def f(x):
+#    seq = 'L'
+#    while x>len(seq):
+#        seq = next_seq(seq)
     
-    #print (seq)
-    return (seq[x-1])
+#    #print (seq)
+#    return (seq[x-1])
 
 
+def f(x):
+    mp.dps = x
+    a = int(x*((mpf(2)**mpf(0.5))/mpf(4.5)))
+    b = int((x-1)*((mpf(2)**mpf(0.5))/mpf(4.5)))
+
+    return a-b
+
+def g(x):
+    mp.dps = x
+    a = int(x*((mpf(2)**mpf(0.5))/mpf(7)))
+    b = int((x-1)*((mpf(2)**mpf(0.5))/mpf(7)))
+
+    return a-b
 
 x = 1
 
@@ -138,10 +154,16 @@ while run:
         play_notes()
         beat_changed = False
 
+    
+    if (f(x//32) == 1) and (x%32 == 0) and g(x//32) == 1:
+        pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+        rum.play()
+        rum.play()
 
-    if (f(x//15) == 'L') and (x%15 == 0):
-        kick.play()
-
+    if (f(x//32) == 0) and (x%32 == 0) and g(x//32) == 0:
+        pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+        rum.play()
+    
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
