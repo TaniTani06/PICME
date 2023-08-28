@@ -31,7 +31,7 @@ instruments = 6
 boxes = []
 clicked = [[-1 for _ in range(beats)]for _ in  range(instruments)]
 active_list = [1 for _ in range(instruments)]
-bpm = 768
+bpm = 720
 playing = True
 active_length = 0
 active_beat = 1
@@ -41,7 +41,7 @@ beat_changed = True
 agogo = mixer.Sound('sounds\AGOGO5.wav')
 le = mixer.Sound('sounds\le4.wav')
 rumpi = mixer.Sound('sounds\\rumpi.wav')
-rum = mixer.Sound('sounds\\rum4.wav')
+rum = mixer.Sound('sounds\\rum3.wav')
 clap = mixer.Sound('sounds\clap.wav')
 tom = mixer.Sound('sounds\\tom.wav')
 pygame.mixer.set_num_channels(instruments*3)
@@ -128,22 +128,22 @@ def next_seq(seq):
     return seq
 
    
-#def f(x):
-#    seq = 'L'
-#    while x>len(seq):
-#        seq = next_seq(seq)
-    
-#    #print (seq)
-#    return (seq[x-1])
+def f(x):
+    seq = 'L'
+    while x>len(seq):
+        seq = next_seq(seq)
+   
+    #print (seq)
+    return (seq[x-1])
 
-
+'''
 def f(x):
     mp.dps = x
     a = int(x*((mpf(2)**mpf(0.5))/mpf(4.5)))
     b = int((x-1)*((mpf(2)**mpf(0.5))/mpf(4.5)))
 
     return a-b
-
+'''
 def g(x):
     mp.dps = x
     a = int(x*((mpf(2)**mpf(0.5))/mpf(3.5)))
@@ -181,41 +181,12 @@ while run:
         play_notes()
         beat_changed = False
 
-    #12/s -> 16 em 4/3 s
-    #x aumenta 256/3 a cada 16 quadrinhos
-
-    #96 -> 1x /loop (16 retângulos), 24 -> 4x /loop, 12 -> 8x /loop, 6 -> 16x /loop (em todo retângulo)
-    #if (x%6 == 0):
-    if (f(x//96) == 0) and (x%96 == 30):
-        if active_list[3] == 1:
-            pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-            rum.play()
-            play3 = True
     
-    
-    if play3 == True and x%96 == 48:
+    if (f(x//32) == 'L') and x%32 == 0:
         if active_list[3] == 1:
             pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
             rum.play()
 
-    if play3 == True and x%96 == 66:
-        if active_list[3] == 1:
-            pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-            rum.play()
-            play3 = False
-    
-    '''
-    if (f(x//6) == 1) and (x%6 == 0) and g(x//6) == 1:
-        if active_list[3] == 1:
-            pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-            rum.play()
-            rum.play()
-
-    if (f(x//6) == 0) and (x%6 == 0) and g(x//6) == 0:
-        if active_list[3] == 1:
-            pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-            rum.play()
-    '''
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
