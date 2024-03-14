@@ -41,7 +41,7 @@ beat_changed = True
 agogo = mixer.Sound('sounds\AGOGO5.wav')
 le = mixer.Sound('sounds\le4.wav')
 rumpi = mixer.Sound('sounds\\rumpi.wav')
-rum = mixer.Sound('sounds\\rum3.wav')
+rum = mixer.Sound('sounds\\rum4.wav')
 clap = mixer.Sound('sounds\clap.wav')
 tom = mixer.Sound('sounds\\tom.wav')
 pygame.mixer.set_num_channels(instruments*3)

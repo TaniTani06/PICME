@@ -24,6 +24,8 @@ medium_font = pygame.font.Font('freesansbold.ttf', 24)
 
 
 play3 = False
+tocar = [0, 0, 0, 0] #lista para computar qual padrão de toques será usado
+falso = [0, 0, 0, 0] #lista para comparar com o tocar sendo todo igual a 0
 fps = 64
 timer = pygame.time.Clock()
 beats = 16
@@ -38,10 +40,10 @@ active_beat = 1
 beat_changed = True
 
 #load in sounds
-agogo = mixer.Sound('sounds\AGOGO5.wav')
+agogo = mixer.Sound('sounds\AGOGO6.wav')
 le = mixer.Sound('sounds\le4.wav')
 rumpi = mixer.Sound('sounds\\rumpi.wav')
-rum = mixer.Sound('sounds\\rum4.wav')
+rum = mixer.Sound('sounds\\rum.wav')
 clap = mixer.Sound('sounds\clap.wav')
 tom = mixer.Sound('sounds\\tom.wav')
 pygame.mixer.set_num_channels(instruments*3)
@@ -80,15 +82,16 @@ def draw_grid(clicks, beat, actives):
 
     rum_text = label_font.render('Rum', True, colors[actives[3]])
     screen.blit(rum_text, (25,265))
-
+    '''
     clap_text = label_font.render('Clap', True, colors[actives[4]])
     screen.blit(clap_text, (25,345))
 
     floor_text = label_font.render('Floor Tom', True, colors[actives[5]])
     screen.blit(floor_text, (30,425))
+    '''
     for i in range(instruments):
         pygame.draw.line(screen, gray, (0, (i*80) + 80), (218, (i*80) + 80), 5)
-
+    
 
     for i in range(beats):
         for j in range(instruments):
@@ -116,7 +119,8 @@ def draw_grid(clicks, beat, actives):
 
 
 
-
+'''
+#usando fibonacci como f(x)
 def next_seq(seq):
     new_seq = ''
     for i in range(len(seq)):
@@ -126,16 +130,25 @@ def next_seq(seq):
             new_seq = new_seq + 'L'
     seq = new_seq
     return seq
+  
 
-   
-#def f(x):
-#    seq = 'L'
-#    while x>len(seq):
-#        seq = next_seq(seq)
+def f(x):
+    seq = 'L'
+    while x>len(seq):
+        seq = next_seq(seq)
     
-#    #print (seq)
-#    return (seq[x-1])
+    #print (seq)
+    return (seq[x-1])
+'''
 
+'''
+def f(x):
+    mp.dps = x
+    a = int(x*((mpf(2)**mpf(0.5))/mpf(4.5)))
+    b = int((x-1)*((mpf(2)**mpf(0.5))/mpf(4.5)))
+
+    return a-b
+'''
 
 def f(x):
     mp.dps = x
@@ -181,42 +194,100 @@ while run:
         play_notes()
         beat_changed = False
 
-    #12/s -> 16 em 4/3 s
-    #x aumenta 256/3 a cada 16 quadrinhos
+    #x aumenta 6 a cada quadrinho
 
     #96 -> 1x /loop (16 retângulos), 24 -> 4x /loop, 12 -> 8x /loop, 6 -> 16x /loop (em todo retângulo)
     #if (x%6 == 0):
     
-    if (f(x//96) == 0) and (x%96 == 30):
+    if tocar[0] != 0 and x%6 == 0:
         if active_list[3] == 1:
-            pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-            rum.play()
-            play3 = True
-    
-    
-    if play3 == True and x%96 == 48:
-        if active_list[3] == 1:
-            pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-            rum.play()
+            tocar[0] += 1
+    if tocar[0] > 2:                #intervalo mínimo entre dois "toques" consecutivos
+                tocar[0] = 0
 
-    if play3 == True and x%96 == 66:
-        if active_list[3] == 1:
-            pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-            rum.play()
-            play3 = False
-    
-    '''
-    if (f(x//6) == 1) and (x%6 == 0) and g(x//6) == 1:
-        if active_list[3] == 1:
-            pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-            rum.play()
-            rum.play()
+    #Se nenhum toque estiver selecionado, em todo quadrinho se roda a função para escolher um dos toques
+    if (tocar == falso) and x%6 == 0:
+        if (f(x/6) == 1 and g(x/6) == 1):
+            tocar[0] = 1
+        elif (f(x/6) == 1 and g(x/6) == 0):
+            tocar[1] = 1
+        elif (f(x/6) == 0 and g(x/6) == 1):
+            tocar[2] = 1
+        else:
+            tocar[3] = 1
+        
+    #print(tocar)
 
-    if (f(x//6) == 0) and (x%6 == 0) and g(x//6) == 0:
+    #                    chamado de quatro
+    if tocar[1] != 0:
         if active_list[3] == 1:
-            pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-            rum.play()
-    '''
+            if tocar[1] == 1 and x%48 == 0:
+                pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+                rum.play()
+                tocar[1] += 1
+            if tocar[1] == 2 and x%48 == 12:
+                pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+                rum.play()
+                tocar[1] += 1
+            if tocar[1] == 3 and x%48 == 0:
+                pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+                rum.play()
+                tocar[1] += 1
+            if tocar[1] == 4 and x%48 == 24:
+                pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+                rum.play()
+                tocar[1] += 1
+    if tocar[1] > 4:
+                tocar[1] = 0
+                tocar[0] = 1
+
+    if tocar[3] != 0:
+        if active_list[3] == 1:
+            if tocar[3] == 1 and x%48 == 0:
+                pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+                rum.play()
+                tocar[3] += 1
+            if tocar[3] == 2 and x%48 == 12:
+                pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+                rum.play()
+                tocar[3] += 1
+            if tocar[3] == 3 and x%48 == 36:
+                pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+                rum.play()
+                tocar[3] += 1
+            if tocar[3] == 4 and x%48 == 0:
+                pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+                rum.play()
+                tocar[3] += 1
+            if tocar[3] == 5 and x%48 == 24:
+                pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+                rum.play()
+                tocar[3] += 1
+            if tocar[3] == 6 and x%48 == 36:
+                pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+                rum.play()
+                tocar[3] += 1
+            if tocar[3] == 7 and x%48 == 12:
+                pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+                rum.play()
+                tocar[3] += 1
+            if tocar[3] == 8 and x%48 == 36:
+                pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+                rum.play()
+                tocar[3] += 1
+    if tocar[3] > 8:
+                tocar[3] = 0
+                tocar[0] = 1
+
+    if tocar[2] != 0 and x%6 == 0:
+        if active_list[3] == 1:
+            #pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
+            #rum.play()
+            tocar[2] += 1
+    if tocar[2] > 4:
+                tocar[2] = 0
+                tocar[0] = 1
+    
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
