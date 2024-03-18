@@ -218,19 +218,19 @@ while run:
         if active_list[3] == 1:
             if tocar[1] == 1 and x%48 == 0:
                 pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-                rum.play()
+                rum_pau.play()
                 tocar[1] += 1
             if tocar[1] == 2 and x%48 == 12:
                 pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-                rum_pau.play()
+                rum.play()
                 tocar[1] += 1
             if tocar[1] == 3 and x%48 == 0:
                 pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-                rum.play()
+                rum_pau.play()
                 tocar[1] += 1
             if tocar[1] == 4 and x%48 == 24:
                 pygame.draw.rect(screen, yellow, [0, 240, 218, 80], 0, 5)
-                rum_pau.play()
+                rum.play()
                 tocar[1] += 1
     if tocar[1] > 4:
                 tocar[1] = 0
