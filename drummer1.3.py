@@ -29,7 +29,7 @@ falso = [0, 0, 0, 0] #lista para comparar com o tocar sendo todo igual a 0
 fps = 64
 timer = pygame.time.Clock()
 beats = 16
-instruments = 6
+instruments = 4
 boxes = []
 clicked = [[-1 for _ in range(beats)]for _ in  range(instruments)]
 active_list = [1 for _ in range(instruments)]
@@ -61,8 +61,9 @@ def play_notes():
                 rum.play()
 
 def draw_grid(clicks, beat, actives):
-    left_box = pygame.draw.rect(screen, gray, [0, 0, 220, height - 238], 5)
-    bottom_box = pygame.draw.rect(screen, gray, [0, height - 242, width, 240], 5)
+    left_box = pygame.draw.rect(screen, gray, [0, 0, 220, height - 400], 5)
+    bottom_box = pygame.draw.rect(screen, gray, [0, height - 402, width, 400], 5)
+    outer_box = pygame.draw.rect(screen, gray, [0, 0, width, height], 5)
     boxes = []
     colors = [gray, white, gray]
 
@@ -98,13 +99,13 @@ def draw_grid(clicks, beat, actives):
                 else:
                     color = dark_gray
             rect = pygame.draw.rect(screen, color, [i*((width-217)//beats) + 220, (j*80) + 5,
-                ((width-217)//beats) - 3, ((height-240)//instruments) - 10], 0, 3)
+                ((width-217)//beats) - 3, ((height-240)//6) - 10], 0, 3)
 
             pygame.draw.rect(screen, gold, [i*((width-217)//beats) + 220, (j*80),
-                ((width-217)//beats), ((height-240)//instruments)], 5, 5)
+                ((width-217)//beats), ((height-240)//6)], 5, 5)
             
             pygame.draw.rect(screen, black, [i*((width-217)//beats) + 220, (j*80),
-                ((width-217)//beats), ((height-240)//instruments)], 2, 5)
+                ((width-217)//beats), ((height-240)//6)], 2, 5)
             boxes.append((rect, (i, j)))
 
 
